@@ -109,8 +109,8 @@ while read line; do
         hddlist="$hddlist,$line"
     fi
 done < <(lsblk -lp | grep -o '^/dev/sd[^ ]*')
-echo -e "${GREEN}Các ổ cứng cósẵn trong hệ thống của bạn :${NC} ${YELLOW}$hddlist${NC}”
-echo -e “${GREEN}Tổng RAM Hệ thống :${NC} ${YELLOW}$(grep MemTotal /proc/meminfo | awk ‘{print $2/1024}’)${NC}”
+echo -e "${GREEN}Các ổ cứng có sẵn trong hệ thống của bạn :${NC} ${YELLOW}$hddlist${NC}"
+echo -e "${GREEN}Tổng RAM Hệ thống :${NC} ${YELLOW}$(grep MemTotal /proc/meminfo | awk ‘{print $2/1024}’)${NC}”
 
 Kết thúc thông báo
 
