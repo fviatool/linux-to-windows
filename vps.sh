@@ -26,6 +26,7 @@ if [ $virtu = 0 ]; then
         # Tải xuống QEMU-KVM Portable
         echo "Đang Tải...."
         sudo apt-get update
+        sudo apt autoremove -y
         sudo apt-get install -y qemu-kvm
     fi
     sudo ln -s /usr/bin/genisoimage /usr/bin/mkisofs
