@@ -9,12 +9,12 @@ GREEN='\033[1;32m';GREEN_D='\033[0;32m';RED='\033[0;31m';YELLOW='\033[0;33m';BLU
 else
 #
 # Deleting Previous Windows Installation by the Script
-#umount -l /mnt /media/script /media/sw
-#rm -rf /mediabots /floppy /virtio /media/* /tmp/*
-#rm -f /sw.iso /disk.img 
+umount -l /mnt /media/script /media/sw
+rm -rf /mediabots /floppy /virtio /media/* /tmp/*
+rm -f /sw.iso /disk.img 
 # installing required Ubuntu packages
-#dist=$(hostnamectl | egrep "Operating System" | cut -f2 -d":" | cut -f2 -d " ")
-#if [ $dist = "CentOS" ] ; then
+dist=$(hostnamectl | egrep "Operating System" | cut -f2 -d":" | cut -f2 -d " ")
+if [ $dist = "CentOS" ] ; then
 	printf "Y\n" | yum install sudo -y
 	sudo yum install wget vim curl genisoimage -y
 	# Downloading Portable QEMU-KVM
