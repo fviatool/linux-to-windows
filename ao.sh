@@ -3,18 +3,15 @@
 #Vars
 mounted=0
 GREEN='\033[1;32m';GREEN_D='\033[0;32m';RED='\033[0;31m';YELLOW='\033[0;33m';BLUE='\033[0;34m';NC='\033[0m'
-
-# Kiểm tra ảo hóa..
+# Virtualization checking..
 #virtu=$(egrep -i '^flags.*(vmx|svm)' /proc/cpuinfo | wc -l)
-#if [ $virtu = 0 ]; then 
-    echo -e "[Lỗi] ${RED}Ảo hóa/KVM trên Máy chủ/VPS của bạn đã TẮT\nThoát...${NC}"
-    exit 1
-fi
-
-# Xóa Cài đặt Windows Trước đó bằng Kịch bản
-umount -l /mnt /media/script /media/sw
-rm -rf /mediabots /floppy /virtio /media/* /tmp/*
-rm -f /sw.iso /disk.img 
+#if [ $virtu = 0 ] ; then echo -e "[Error] ${RED}Virtualization/KVM in your Server/VPS is OFF\nExiting...${NC}";
+else
+#
+# Deleting Previous Windows Installation by the Script
+#umount -l /mnt /media/script /media/sw
+#rm -rf /mediabots /floppy /virtio /media/* /tmp/*
+#rm -f /sw.iso /disk.img 
 
 # Cài đặt gói Ubuntu cần thiết
 dist=$(hostnamectl | egrep "Operating System" | cut -f2 -d":" | cut -f2 -d " ")
