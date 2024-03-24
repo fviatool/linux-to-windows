@@ -15,8 +15,8 @@ else
 # installing required Ubuntu packages
 dist=$(hostnamectl | egrep "Operating System" | cut -f2 -d":" | cut -f2 -d " ")
 if [ $dist = "CentOS" ] ; then
-	printf "Y\n" | yum install sudo -y
-	sudo yum install wget vim curl genisoimage -y
+	#printf "Y\n" | yum install sudo -y
+	#sudo yum install wget vim curl genisoimage -y
 	# Downloading Portable QEMU-KVM
 	echo "Downloading QEMU"
 	sudo yum update -y
