@@ -3,24 +3,28 @@
 #Vars
 mounted=0
 GREEN='\033[1;32m';GREEN_D='\033[0;32m';RED='\033[0;31m';YELLOW='\033[0;33m';BLUE='\033[0;34m';NC='\033[0m'
-# Virtualization checking..
-#virtu=$(egrep -i '^flags.*(vmx|svm)' /proc/cpuinfo | wc -l)
-#if [ $virtu = 0 ] ; then echo -e "[Error] ${RED}Virtualization/KVM in your Server/VPS is OFF\nExiting...${NC}";
-else
-#
-# Deleting Previous Windows Installation by the Script
+
+# Xóa cài đặt Windows trước đó bằng kịch bản
 umount -l /mnt /media/script /media/sw
 rm -rf /mediabots /floppy /virtio /media/* /tmp/*
-rm -f /sw.iso /disk.img 
-# installing required Ubuntu packages
+rm -f /sw.iso /disk.img
+
+# Cài đặt gói Ubuntu cần thiết
 dist=$(hostnamectl | egrep "Operating System" | cut -f2 -d":" | cut -f2 -d " ")
-if [ $dist = "CentOS" ] ; then
-	printf "Y\n" | yum install sudo -y
-	sudo yum install wget vim curl genisoimage -y
-	# Downloading Portable QEMU-KVM
-	echo "Downloading QEMU"
-	sudo yum update -y
-	sudo yum install -y qemu-kvm
+if [ $dist = "CentOS" ]; then
+    printf "Y\n" | yum install sudo -y
+    sudo yum install wget vim curl genisoimage -y
+    # Tải xuống QEMU-KVM Portable
+    echo "Đang tải loading..."
+    sudo yum update -y
+    sudo yum install -y qemu-kvm
+elif [ $dist = "Ubuntu" -o $dist = "Debian" ]; then
+    printf "Y\n" | apt-get install sudo -y
+    sudo apt-get install vim curl genisoimage -y
+    # Tải xuống QEMU-KVM Portable
+    echo "Đang tải...."
+    sudo apt-get update
+    sudo apt-get install -y qemu-kvm
 fi
 sudo ln -s /usr/bin/genisoimage /usr/bin/mkisofs
 
@@ -64,20 +68,20 @@ case $choice in
         # Cài đặt Windows 10
         echo "Bạn đã chọn cài đặt Windows 10"
         # Thêm mã để tải tài nguyên cần thiết cho Windows 10 ở đây
-        sudo wget -P /floppy https://download.microsoft.com/download/6/2/A/62A76ABB-9990-4EFC-A4FE-C7D698DAEB96/9600.17050.WINBLUE_REFRESH.140317-1640_X64FRE_SERVER_EVAL_EN-US-IR3_SSS_X64FREE_EN-US_DV9.ISO
+        sudo wget -P /mediabots https://download.microsoft.com/download/6/2/A/62A76ABB-9990-4EFC-A4FE-C7D698DAEB96/9600.17050.WINBLUE_REFRESH.140317-1640_X64FRE_SERVER_EVAL_EN-US-IR3_SSS_X64FREE_EN-US_DV9.ISO
         ;;
     2)
         # Cài đặt Windows Server 2012
         echo "Bạn đã chọn cài đặt Windows Server 2012"
         # Thêm mã để tải tài nguyên cần thiết cho Windows Server 2012 ở đây
-        sudo wget -P /floppy https://ia601506.us.archive.org/4/items/WS2012R2/WS2012R2.ISO
+        sudo wget -P /mediabots https://ia601506.us.archive.org/4/items/WS2012R2/WS2012R2.ISO
         ;;
     *)
         # Cài đặt Windows Server 2012 mặc định sau 15 giây
         echo "Không có lựa chọn được chọn. Tự động cài đặt Windows Server 2012 sau 15 giây..."
         sleep 15
         # Thêm mã để tải tài nguyên cần thiết cho Windows Server 2012 ở đây
-        sudo wget -P /floppy https://ia601506.us.archive.org/4/items/WS2012R2/WS2012R2.ISO
+        sudo wget -P /mediabots https://ia601506.us.archive.org/4/items/WS2012R2/WS2012R2.ISO
         ;;
 esac
 
@@ -94,13 +98,12 @@ sudo echo 1 > /proc/sys/vm/overcommit_memory
 sudo ufw allow 3398/tcp
 sudo ufw allow 443/tcp
 sudo ufw allow 80/tcp
-sudo ufw --force enableGiải phóng bộ nhớ
+sudo ufw --force enable
 
-sync
+# Giải phóng bộ nhớsync
 sudo echo 3 > /proc/sys/vm/drop_caches
 
-Thu thập thông tin về hệ thống
-
+# Thu thập thông tin về hệ thống
 idx=0
 hddlist=””
 while read line; do
@@ -111,23 +114,13 @@ else
 hddlist=”$hddlist,$line”
 fi
 done < <(lsblk -lp | grep -o ‘^/dev/sd[^ ]*’)
-echo -e “Các ổ cứng có sẵn trong hệ thống của bạn : $hddlist”
-echo -e “Tổng RAM Hệ thống : $(grep MemTotal /proc/meminfo | awk ‘{print $2/1024}’)”
+echo -e “${GREEN}Các ổ cứng có sẵn trong hệ thống của bạn :${NC} ${YELLOW}$hddlist${NC}”
+echo -e “${GREEN}Tổng RAM Hệ thống :${NC} ${YELLOW}$(grep MemTotal /proc/meminfo | awk ‘{print $2/1024}’)${NC}”
 
-#!/bin/bash
+Script kết thúc
 
-Lấy thông tin người dùng hiện tại
-
-current_user=$(whoami)
-echo “Tên người dùng hiện tại: $current_user”
-
-Lấy danh sách người dùng và mật khẩu
-
-echo “Danh sách người dùng và mật khẩu:”
-cat /etc/passwd | awk -F: ‘{print “Người dùng: “ $1 “, Mật khẩu: “ $2}’
-
-Lấy địa chỉ IP của máy
-
-echo “Địa chỉ IP của máy:”
-ip_addr=$(hostname -I)
-echo “$ip_addr”
+echo -e “\n${BLUE}Mọi tài nguyên cần thiết đã được tải thành công!${NC}”
+sleep 2
+echo -e “\n${YELLOW}Đang khởi động máy ảo QEMU..${NC}\n”
+sleep 3
+sudo qemu-system-x86_64 -m 3072 -smp cores=4 -enable-kvm -cpu host -cdrom /mediabots/WS2012R2.ISO -drive file=disk.img,if=virtio -boot order=d -net nic -net user -usb -usbdevice mouse -usbdevice keyboard -vga std
