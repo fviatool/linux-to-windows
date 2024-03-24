@@ -4,8 +4,8 @@
 mounted=0
 GREEN='\033[1;32m';GREEN_D='\033[0;32m';RED='\033[0;31m';YELLOW='\033[0;33m';BLUE='\033[0;34m';NC='\033[0m'
 # Virtualization checking..
-virtu=$(egrep -i '^flags.*(vmx|svm)' /proc/cpuinfo | wc -l)
-if [ $virtu = 0 ] ; then echo -e "[Error] ${RED}Virtualization/KVM in your Server/VPS is OFF\nExiting...${NC}";
+#virtu=$(egrep -i '^flags.*(vmx|svm)' /proc/cpuinfo | wc -l)
+#if [ $virtu = 0 ] ; then echo -e "[Error] ${RED}Virtualization/KVM in your Server/VPS is OFF\nExiting...${NC}";
 else
 #
 # Deleting Previous Windows Installation by the Script
@@ -13,8 +13,8 @@ else
 #rm -rf /mediabots /floppy /virtio /media/* /tmp/*
 #rm -f /sw.iso /disk.img 
 # installing required Ubuntu packages
-dist=$(hostnamectl | egrep "Operating System" | cut -f2 -d":" | cut -f2 -d " ")
-if [ $dist = "CentOS" ] ; then
+#dist=$(hostnamectl | egrep "Operating System" | cut -f2 -d":" | cut -f2 -d " ")
+#if [ $dist = "CentOS" ] ; then
 	printf "Y\n" | yum install sudo -y
 	sudo yum install wget vim curl genisoimage -y
 	# Downloading Portable QEMU-KVM
