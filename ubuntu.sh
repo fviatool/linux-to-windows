@@ -12,22 +12,23 @@ if [ $virtu = 0 ]; then
     #rm -rf /mediabots /floppy /virtio /media/* /tmp/*
     #rm -f /sw.iso /disk.img 
     # Cài đặt gói Ubuntu cần thiết
-dist=$(hostnamectl | egrep "Operating System" | cut -f2 -d":" | cut -f2 -d " ")
-if [ $dist = "CentOS" ] ; then
-	#printf "Y\n" | yum install sudo -y
-	#sudo yum install wget vim curl genisoimage -y
-	# Downloading Portable QEMU-KVM
-	echo "Downloading QEMU"
-	sudo yum update -y
-	sudo yum install -y qemu-kvm
-elif [ $dist = "Ubuntu" -o $dist = "Debian" ] ; then
-	printf "Y\n" | apt-get install sudo -y
-	sudo apt-get install vim curl genisoimage -y
-	# Downloading Portable QEMU-KVM
-	echo "Downloading QEMU"
-	sudo apt-get update
-	sudo apt-get install -y qemu-kvm
-fi
+    dist=$(hostnamectl | egrep "Operating System" | cut -f2 -d":" | cut -f2 -d " ")
+    if [ $dist = "CentOS" ]; then
+        printf "Y\n" | yum install sudo -y
+        sudo yum install wget vim curl genisoimage -y
+        # Tải xuống QEMU-KVM Portable
+        echo "Đang Tải loading..."
+        sudo yum update -y
+        sudo yum install -y qemu-kvm
+    elif [ $dist = "Ubuntu" -o $dist = "Debian" ]; then
+printf "Y\n" | apt-get install sudo -y
+        sudo apt-get install vim curl genisoimage -y
+        # Tải xuống QEMU-KVM Portable
+        echo "Đang Tải...."
+        sudo apt-get update
+        sudo apt autoremove -y
+        sudo apt-get install -y qemu-kvm
+    fi
 sudo ln -s /usr/bin/genisoimage /usr/bin/mkisofs
 # Downloading resources
 sudo mkdir /mediabots /floppy /virtio
